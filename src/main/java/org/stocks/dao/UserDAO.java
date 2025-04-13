@@ -226,5 +226,68 @@ public class UserDAO {
         }
     }
 
+    public void updateUserPreferences(int userId, String sector, String riskLevel, boolean notify) throws Exception {
+        try (Connection conn = dataSource.getConnection()) {
+            CallableStatement stmt = conn.prepareCall("{CALL sp_set_user_preferences(?, ?, ?, ?)}");
+            stmt.setInt(1, userId);
+            stmt.setString(2, sector);
+            stmt.setString(3, riskLevel);
+            stmt.setBoolean(4, notify);
+            stmt.execute();
+        }
+    }
+
+    public void executeTrade(Map<String, Object> trade) throws Exception {
+        try (Connection conn = dataSource.getConnection()) {
+            CallableStatement stmt = conn.prepareCall("{CALL sp_execute_trade(?, ?, ?, ?, ?, ?, ?)}");
+
+            stmt.setInt(1, Integer.parseInt(trade.get("user_id").toString()));
+            stmt.setInt(2, Integer.parseInt(trade.get("portfolio_id").toString()));
+            stmt.setInt(3, Integer.parseInt(trade.get("stock_id").toString()));
+            stmt.setString(4, trade.get("buy_or_sell").toString());
+            stmt.setInt(5, Integer.parseInt(trade.get("quantity").toString()));
+            stmt.setString(6, trade.get("order_type").toString());
+            stmt.setString(7, trade.get("transaction_mode").toString());
+
+            stmt.execute();
+        }
+    }
+
+    public void addToWatchlist(int userId, int stockId) throws Exception {
+        try (Connection conn = dataSource.getConnection()) {
+            CallableStatement stmt = conn.prepareCall("{CALL sp_add_to_watchlist(?, ?)}");
+            stmt.setInt(1, userId);
+            stmt.setInt(2, stockId);
+            stmt.execute();
+        }
+    }
+
+    public List<Map<String, Object>> getAllStocks() throws Exception {
+        List<Map<String, Object>> stocks = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM vw_all_stocks");
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                stocks.add(Map.of(
+                    "stock_id", rs.getInt("stock_id"),
+                    "symbol", rs.getString("symbol"),
+                    "company_name", rs.getString("company_name"),
+                    "current_value", rs.getBigDecimal("current_value")
+                ));
+            }
+        }
+        return stocks;
+    }
+
+    public void removeFromWatchlist(int userId, int stockId) throws Exception {
+        try (Connection conn = dataSource.getConnection()) {
+            CallableStatement stmt = conn.prepareCall("{CALL sp_remove_from_watchlist(?, ?)}");
+            stmt.setInt(1, userId);
+            stmt.setInt(2, stockId);
+            stmt.execute();
+        }
+    }
+
+
 
 }

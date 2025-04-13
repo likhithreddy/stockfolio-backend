@@ -57,5 +57,64 @@ public class UserController {
     }
   }
 
+  @PostMapping("/preferences")
+  public ResponseEntity<?> updatePreferences(@RequestBody Map<String, Object> prefs) {
+    try {
+      int userId = Integer.parseInt(prefs.get("user_id").toString());
+      String sector = (String) prefs.get("preferred_sector");
+      String risk = (String) prefs.get("preferred_risk_level");
+      boolean notify = Boolean.parseBoolean(prefs.get("notification_enabled").toString());
+
+      userDAO.updateUserPreferences(userId, sector, risk, notify);
+      return ResponseEntity.ok(Map.of("message", "Preferences updated"));
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+  }
+
+  @PostMapping("/trade")
+  public ResponseEntity<?> executeTrade(@RequestBody Map<String, Object> tradeData) {
+    try {
+      userDAO.executeTrade(tradeData);
+      return ResponseEntity.ok(Map.of("message", "Trade executed successfully"));
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+  }
+
+  @PostMapping("/watchlist/add")
+  public ResponseEntity<?> addToWatchlist(@RequestBody Map<String, Object> data) {
+    try {
+      int userId = Integer.parseInt(data.get("user_id").toString());
+      int stockId = Integer.parseInt(data.get("stock_id").toString());
+      userDAO.addToWatchlist(userId, stockId);
+      return ResponseEntity.ok(Map.of("message", "Stock added to watchlist"));
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+  }
+
+  @GetMapping("/stock/all")
+  public ResponseEntity<?> getAllStocks() {
+    try {
+      return ResponseEntity.ok(userDAO.getAllStocks());
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+  }
+
+  @PostMapping("/watchlist/remove")
+  public ResponseEntity<?> removeFromWatchlist(@RequestBody Map<String, Object> data) {
+    try {
+      int userId = Integer.parseInt(data.get("user_id").toString());
+      int stockId = Integer.parseInt(data.get("stock_id").toString());
+      userDAO.removeFromWatchlist(userId, stockId);
+      return ResponseEntity.ok(Map.of("message", "Removed from watchlist"));
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+  }
+
+
 
 }

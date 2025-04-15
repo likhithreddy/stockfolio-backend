@@ -288,6 +288,36 @@ public class UserDAO {
         }
     }
 
+    public void createPortfolio(int userId, String portfolioName) throws Exception {
+        try (Connection conn = dataSource.getConnection()) {
+            CallableStatement stmt = conn.prepareCall("{CALL sp_create_portfolio(?, ?)}");
+            stmt.setInt(1, userId);
+            stmt.setString(2, portfolioName);
+            stmt.execute();
+        }
+    }
+
+    public List<Map<String, Object>> getPortfolioPerformance(int portfolioId) throws Exception {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        try (Connection conn = dataSource.getConnection();
+             CallableStatement stmt = conn.prepareCall("{CALL sp_get_portfolio_performance(?)}")) {
+
+            stmt.setInt(1, portfolioId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                result.add(Map.of(
+                    "date", rs.getDate("history_date").toString(),
+                    "value", rs.getBigDecimal("portfolio_value")
+                ));
+            }
+        }
+
+        return result;
+    }
+
+
 
 
 }

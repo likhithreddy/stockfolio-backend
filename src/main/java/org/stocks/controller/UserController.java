@@ -115,6 +115,27 @@ public class UserController {
     }
   }
 
+  @PostMapping("/portfolio")
+  public ResponseEntity<?> createPortfolio(@RequestBody Map<String, Object> data) {
+    try {
+      int userId = Integer.parseInt(data.get("user_id").toString());
+      String name = data.get("portfolio_name").toString();
+      userDAO.createPortfolio(userId, name);
+      return ResponseEntity.ok(Map.of("message", "Portfolio created"));
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+  }
+
+  @GetMapping("/portfolio/performance")
+  public ResponseEntity<?> getPerformance(@RequestParam int portfolioId) {
+    try {
+      return ResponseEntity.ok(userDAO.getPortfolioPerformance(portfolioId));
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+  }
+
 
 
 }

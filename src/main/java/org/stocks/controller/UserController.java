@@ -127,15 +127,4 @@ public class UserController {
     }
   }
 
-  @GetMapping("/portfolio/performance")
-  public ResponseEntity<?> getPerformance(@RequestParam int portfolioId) {
-    try {
-      return ResponseEntity.ok(userDAO.getPortfolioPerformance(portfolioId));
-    } catch (Exception e) {
-      return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
-    }
-  }
-
-
-
 }

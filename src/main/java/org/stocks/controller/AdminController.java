@@ -81,5 +81,45 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<?> getAllUsersWithKyc() {
+        try {
+            return ResponseEntity.ok(adminDAO.getAllUsersWithKyc());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/approve-kyc")
+    public ResponseEntity<?> approveKyc(@RequestBody Map<String, Object> data) {
+        try {
+            int userId = Integer.parseInt(data.get("user_id").toString());
+            adminDAO.approveKyc(userId);
+            return ResponseEntity.ok(Map.of("message", "KYC approved"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/revoke-kyc")
+    public ResponseEntity<?> revokeKyc(@RequestBody Map<String, Object> data) {
+        try {
+            int userId = Integer.parseInt(data.get("user_id").toString());
+            adminDAO.revokeKyc(userId);
+            return ResponseEntity.ok(Map.of("message", "KYC revoked"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/stocks")
+    public ResponseEntity<?> getAllStocks() {
+        try {
+            return ResponseEntity.ok(adminDAO.getAllStocks());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
 
 }

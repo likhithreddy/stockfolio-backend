@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.Types;
 import java.util.Map;
 
 @Repository
@@ -42,7 +41,7 @@ public class AdminDAO {
             stmt.setString(1, data.get("firstname"));
             stmt.setString(2, data.get("lastname"));
             stmt.setString(3, data.get("email"));
-            stmt.setString(4, data.get("password")); // or secret_key
+            stmt.setString(4, data.get("password"));
 
             stmt.execute();
         }
@@ -96,7 +95,7 @@ public class AdminDAO {
             stmt.setInt(1, Integer.parseInt(data.get("stock_id").toString()));
             stmt.setString(2, (String) data.get("headline"));
             stmt.setString(3, (String) data.get("news_source"));
-            stmt.setInt(4, Integer.parseInt(data.get("impact_score").toString())); // ✅ now INT
+            stmt.setInt(4, Integer.parseInt(data.get("impact_score").toString()));
 
             stmt.execute();
         }

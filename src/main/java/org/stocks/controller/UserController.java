@@ -136,6 +136,14 @@ public class UserController {
     }
   }
 
+  @GetMapping("/user/news")
+  public ResponseEntity<?> getUserNews(@RequestParam int userId) {
+    try {
+      return ResponseEntity.ok(userDAO.getUserNews(userId));
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+  }
 
 
 }

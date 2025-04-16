@@ -116,6 +116,7 @@ public class UserDAO {
         try (ResultSet rs = stmt.getResultSet()) {
           if (rs.next()) {
             dashboard.put("userInfo", Map.of(
+                    "userId", rs.getInt("user_id"),
                     "firstname", rs.getString("firstname"),
                     "lastname", rs.getString("lastname"),
                     "email", rs.getString("email"),
@@ -350,4 +351,16 @@ public class UserDAO {
 
     return newsList;
   }
+
+  public void updateFunds(int userId, BigDecimal amount, String operation) throws Exception {
+    try (Connection conn = dataSource.getConnection()) {
+      CallableStatement stmt = conn.prepareCall("{CALL sp_update_funds(?, ?, ?)}");
+      stmt.setInt(1, userId);
+      stmt.setBigDecimal(2, amount);
+      stmt.setString(3, operation); // 'ADD' or 'WITHDRAW'
+      stmt.execute();
+    }
+  }
+
+
 }

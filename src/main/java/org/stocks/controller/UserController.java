@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.stocks.dao.UserDAO;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @RestController
@@ -132,6 +133,20 @@ public class UserController {
   public ResponseEntity<?> getUserNews(@RequestParam int userId) {
     try {
       return ResponseEntity.ok(userDAO.getUserNews(userId));
+    } catch (Exception e) {
+      return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+    }
+  }
+
+  @PostMapping("/funds/update")
+  public ResponseEntity<?> updateFunds(@RequestBody Map<String, Object> data) {
+    try {
+      int userId = Integer.parseInt(data.get("user_id").toString());
+      BigDecimal amount = new BigDecimal(data.get("amount").toString());
+      String operation = data.get("operation").toString().toUpperCase(); // 'ADD' or 'WITHDRAW'
+
+      userDAO.updateFunds(userId, amount, operation);
+      return ResponseEntity.ok(Map.of("message", "Funds updated successfully"));
     } catch (Exception e) {
       return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
     }

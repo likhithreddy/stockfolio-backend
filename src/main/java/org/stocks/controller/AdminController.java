@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import org.stocks.dao.AdminDAO;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @RestController
@@ -116,6 +117,27 @@ public class AdminController {
     public ResponseEntity<?> getAllStocks() {
         try {
             return ResponseEntity.ok(adminDAO.getAllStocks());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/stocks/update-price")
+    public ResponseEntity<?> updateStockPrice(@RequestBody Map<String, Object> data) {
+        try {
+            int stockId = (int) data.get("stock_id");
+            BigDecimal newPrice = new BigDecimal(data.get("new_price").toString());
+            adminDAO.updateStockPrice(stockId, newPrice);
+            return ResponseEntity.ok(Map.of("message", "Stock price updated"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/stock-exchanges")
+    public ResponseEntity<?> getAllStockExchanges() {
+        try {
+            return ResponseEntity.ok(adminDAO.getAllStockExchanges());
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }

@@ -3,6 +3,8 @@ package org.stocks.dao;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -165,5 +167,33 @@ public class AdminDAO {
         return stocks;
     }
 
+    public void updateStockPrice(int stockId, BigDecimal newPrice) throws SQLException {
+        try (Connection conn = dataSource.getConnection();
+             CallableStatement stmt = conn.prepareCall("{CALL sp_update_stock_price(?, ?)}")) {
+            stmt.setInt(1, stockId);
+            stmt.setBigDecimal(2, newPrice);
+            stmt.execute();
+        }
+    }
+
+    public List<Map<String, Object>> getAllStockExchanges() throws SQLException {
+        List<Map<String, Object>> exchanges = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             CallableStatement stmt = conn.prepareCall("{CALL sp_get_all_stock_exchanges()}");
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Map<String, Object> exchange = new HashMap<>();
+                exchange.put("stock_exchange_id", rs.getInt("stock_exchange_id"));
+                exchange.put("stock_exchange_name", rs.getString("stock_exchange_name"));
+                exchange.put("country", rs.getString("country"));
+                exchange.put("opening_time", rs.getString("opening_time"));
+                exchange.put("closing_time", rs.getString("closing_time"));
+                exchange.put("timezone", rs.getString("timezone"));
+                exchanges.add(exchange);
+            }
+        }
+        return exchanges;
+    }
 
 }

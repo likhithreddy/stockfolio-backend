@@ -196,4 +196,29 @@ public class AdminDAO {
         return exchanges;
     }
 
+
+
+    public List<Map<String, Object>> getAllMarketNews() throws SQLException {
+        List<Map<String, Object>> newsList = new ArrayList<>();
+
+        try (Connection conn = dataSource.getConnection();
+             CallableStatement stmt = conn.prepareCall("{CALL sp_get_all_market_news()}")) {
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                newsList.add(Map.of(
+                    "news_id", rs.getInt("news_id"),
+                    "headline", rs.getString("headline"),
+                    "news_source", rs.getString("news_source"),
+                    "publication_date", rs.getDate("publication_date").toString(),
+                    "impact_score", rs.getInt("impact_score"),
+                    "stock_id", rs.getInt("stock_id"),
+                    "symbol", rs.getString("symbol"),
+                    "company_name", rs.getString("company_name")
+                ));
+            }
+        }
+
+        return newsList;
+    }
 }

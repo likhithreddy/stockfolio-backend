@@ -162,11 +162,6 @@ public class UserDAO {
         try (ResultSet rs = stmt.getResultSet()) {
           List<Map<String, Object>> portfolios = new ArrayList<>();
           while (rs.next()) {
-//            portfolios.add(Map.of(
-//                    "portfolio_id", rs.getInt("portfolio_id"),
-//                    "portfolio_name", rs.getString("portfolio_name"),
-//                    "created_date", rs.getTimestamp("created_date")
-//            ));
             int portfolioId = rs.getInt("portfolio_id");
 
             CallableStatement profitStmt = conn.prepareCall("SELECT fn_portfolio_profit(?)");
@@ -361,6 +356,5 @@ public class UserDAO {
       stmt.execute();
     }
   }
-
 
 }

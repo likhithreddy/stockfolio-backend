@@ -62,7 +62,7 @@ public class AdminController {
     }
 
 
-    @PostMapping("/update-price-history")
+    @PutMapping("/update-price-history")
     public ResponseEntity<?> updateStockPriceHistory(@RequestBody Map<String, Object> priceData) {
         try {
             adminDAO.updateStockPriceHistory(priceData);

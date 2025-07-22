@@ -1,5 +1,8 @@
 # Multi-stage build for Spring Boot
-FROM maven:3.9-openjdk-21-slim AS builder
+FROM eclipse-temurin:21-jdk AS builder
+
+# Install Maven
+RUN apt-get update && apt-get install -y maven
 
 # Set working directory
 WORKDIR /app
@@ -17,7 +20,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Runtime stage
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jre
 
 # Set working directory
 WORKDIR /app

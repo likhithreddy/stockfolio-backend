@@ -1,5 +1,5 @@
 # Multi-stage build for Spring Boot
-FROM maven:3.9.4-openjdk-21 AS builder
+FROM maven:3.9-openjdk-21-slim AS builder
 
 # Set working directory
 WORKDIR /app

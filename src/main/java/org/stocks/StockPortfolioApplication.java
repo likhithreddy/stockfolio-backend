@@ -25,7 +25,7 @@ public class StockPortfolioApplication {
     // Add allowed origins
     configuration.addAllowedOrigin("http://localhost:5173");
     configuration.addAllowedOrigin("http://localhost:3000");
-    configuration.addAllowedOrigin("https://stock-folio.netlify.app");  // Your Netlify URL
+    configuration.addAllowedOrigin(frontendUrl);  // Environment variable
     configuration.addAllowedOriginPattern("https://*.netlify.app");
 
     configuration.addAllowedMethod("*");

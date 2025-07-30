@@ -1,5 +1,6 @@
 package org.stocks;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @SpringBootApplication
 public class StockPortfolioApplication {
+
+  @Value("${FRONTEND_URL:http://localhost:5173}")
+  private String frontendUrl;
 
   public static void main(String[] args) {
     SpringApplication.run(StockPortfolioApplication.class, args);
@@ -22,8 +26,8 @@ public class StockPortfolioApplication {
     configuration.addAllowedOrigin("http://localhost:5173");
     configuration.addAllowedOrigin("http://localhost:3000");
 
-    // Allow your Netlify domain (replace with actual URL when you deploy)
-    configuration.addAllowedOriginPattern("https://stock-folio.netlify.app/");
+    // Allow frontend URL from environment variable
+    configuration.addAllowedOrigin(frontendUrl);
 
     configuration.addAllowedMethod("*");
     configuration.addAllowedHeader("*");

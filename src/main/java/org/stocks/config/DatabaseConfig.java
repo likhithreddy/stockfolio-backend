@@ -10,31 +10,21 @@ import javax.sql.DataSource;
 @Configuration
 public class DatabaseConfig {
 
-    @Value("${DB_HOST:localhost}")
-    private String dbHost;
+    @Value("${DATABASE_URL:jdbc:mysql://localhost:3306/stockportfolio}")
+    private String databaseUrl;
 
-    @Value("${DB_PORT:3306}")
-    private String dbPort;
+    @Value("${DATABASE_USERNAME:root}")
+    private String databaseUsername;
 
-    @Value("${DB_NAME:stockportfolio}")
-    private String dbName;
-
-    @Value("${DB_USERNAME:root}")
-    private String dbUsername;
-
-    @Value("${DB_PASSWORD:}")
-    private String dbPassword;
+    @Value("${DATABASE_PASSWORD:}")
+    private String databasePassword;
 
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource(){
         MysqlDataSource ds = new MysqlDataSource();
-
-        // Build URL with environment variables
-        String url = String.format("jdbc:mysql://%s:%s/%s", dbHost, dbPort, dbName);
-        ds.setURL(url);
-        ds.setUser(dbUsername);
-        ds.setPassword(dbPassword);
-
+        ds.setURL(databaseUrl);
+        ds.setUser(databaseUsername);
+        ds.setPassword(databasePassword);
         return ds;
     }
 }

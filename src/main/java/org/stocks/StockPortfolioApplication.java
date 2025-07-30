@@ -22,10 +22,11 @@ public class StockPortfolioApplication {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
+    // Add allowed origins
     configuration.addAllowedOrigin("http://localhost:5173");
     configuration.addAllowedOrigin("http://localhost:3000");
-
-    configuration.addAllowedOrigin(frontendUrl);
+    configuration.addAllowedOrigin("https://stock-folio.netlify.app");  // Your Netlify URL
+    configuration.addAllowedOriginPattern("https://*.netlify.app");
 
     configuration.addAllowedMethod("*");
     configuration.addAllowedHeader("*");
